@@ -25,6 +25,7 @@ module.exports = function () {
   app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'client-react/build', 'index.html'))
   })
+  
   const connectDatabase = async (databaseName = 'chatroom', hostname = 'localhost') => {
     const database = await mongoose.connect(
       process.env.mongodb_uri || `mongodb://${hostname}/${databaseName}`,

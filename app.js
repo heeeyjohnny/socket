@@ -28,7 +28,7 @@ module.exports = function () {
 
   const connectDatabase = async (databaseName = 'chatroom', hostname = 'localhost') => {
     const database = await mongoose.connect(
-      process.env.mongodb_uri || `mongodb://${hostname}/${databaseName}`,
+      process.env.MONGODB_URI || `mongodb://${hostname}/${databaseName}`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

@@ -20,12 +20,12 @@ module.exports = function () {
   const io = require('socket.io')(http)
 
   io.on('connection', SocketController(io))
-  
+
   app.use(express.static(path.join(__dirname, 'client-react/build')))
   app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'client-react/build', 'index.html'))
   })
-  
+
   const connectDatabase = async (databaseName = 'chatroom', hostname = 'localhost') => {
     const database = await mongoose.connect(
       process.env.mongodb_uri || `mongodb://${hostname}/${databaseName}`,

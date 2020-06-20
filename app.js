@@ -5,7 +5,7 @@ module.exports = function () {
   const AuthController = require('./controllers/auth')
   const MessageController = require('./controllers/messages')
   const SocketController = require('./controllers/socket-events')
-  const Path = require('path')
+  const path = require('path')
 
   const app = express()
 
@@ -20,10 +20,14 @@ module.exports = function () {
   const io = require('socket.io')(http)
 
   io.on('connection', SocketController(io))
-
+  
+  app.use(express.static(path.join(__dirname, 'client-react/build')))
+  app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'client-react/build', 'index.html'))
+  })
   const connectDatabase = async (databaseName = 'chatroom', hostname = 'localhost') => {
     const database = await mongoose.connect(
-      process.env.mongoose_uri || `mongodb://${hostname}/${databaseName}`,
+      process.env.mongodb_uri || `mongodb://${hostname}/${databaseName}`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -34,6 +38,10 @@ module.exports = function () {
     console.log(`Database connected at mongodb://${hostname}/${databaseName}...`)
 
     return database
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client-react/build'))
   }
 
   const startServer = port => {
